@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
 import Card from "./Card/Card";
@@ -7,17 +8,29 @@ import Form from './Form';
 
 class App extends Component {
 
+    state = {
+        number: 0
+    };
+
   handleClick = () => {
       import('./moduleA')
           .then(({ moduleA }) => {
-              fetch('/api/10000')
-                  .then(function(response) {
-                      return response.json();
-                  })
-                  .then(function(myJson) {
-                      console.log(JSON.stringify(myJson));
-                      document.getElementById('bt').firstChild.data = myJson.Number;
-                  });
+                axios.get('/api/500')
+                    .then(response => {
+                        console.log(response.data);
+                        const number = response.data.Number;
+                        this.setState({ number });
+                        // document.getElementById('bt').firstChild.data = response.data.Number;
+                    });
+
+              // fetch('/api/10000')
+              //     .then(function(response) {
+              //         return response.json();
+              //     })
+              //     .then(function(myJson) {
+              //         console.log(JSON.stringify(myJson));
+              //         document.getElementById('bt').firstChild.data = myJson.Number;
+              //     });
           })
           .catch(err => {
               // Handle failure
@@ -43,7 +56,7 @@ class App extends Component {
         </header>
         <Card />
           <div>
-              <Button id='bt' onClick={this.handleClick}>Load{process.env.REACT_APP_SECRET_CODE}</Button>
+              <Button id='bt' onClick={this.handleClick}>{ this.state.number }Load{process.env.REACT_APP_SECRET_CODE}</Button>
           </div>
         <Form />
       </div>
